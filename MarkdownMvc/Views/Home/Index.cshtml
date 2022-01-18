@@ -1,0 +1,14 @@
+﻿@{
+        ViewData["Title"] = "Home Page";
+ }
+
+<section class="posts">
+    @foreach (var post in Model)
+    {
+        <div class="post">
+            <h2>@post.Title</h2>
+            <p>@post.Excerpt</p>
+            <a asp-controller="Posts" asp-action="Index" asp-route-postTitle="@post.Title.Replace(' ','-')">read more</a>
+        </div>
+    }
+</section>
