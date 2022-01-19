@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using TheBlogProject.Models;
 
 namespace MarkdownMvc.Controllers
 {
@@ -14,11 +15,13 @@ namespace MarkdownMvc.Controllers
         public List<Post> Posts { get; set; }
 
         private readonly ILogger<HomeController> _logger;
+        private readonly IFileService _fileService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IFileService fileService)
         {
             _logger = logger;
-            Posts = PostRepo.GetPosts();
+            _fileService = fileService;
+            Posts = _fileService.ReadAllPosts();
         }
 
         public IActionResult Index()
