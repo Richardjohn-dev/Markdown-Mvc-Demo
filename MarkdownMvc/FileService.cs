@@ -48,7 +48,7 @@ namespace MarkdownMvc
         public static bool SavePost(Post post)
         {
             //make sure we have it first
-            EnsureFolderYear(post.DateCreated.Year);
+            EnsureFolderYear(22);
 
             try
             {
@@ -64,21 +64,21 @@ namespace MarkdownMvc
                 //    }
                 //}
 
-                var filePath = Path.Combine(_folder + post.DateCreated.Year + "/", post.Slug + ".webinfo");
+                //var filePath = Path.Combine(_folder + post.DateCreated.Year + "/", post.Slug + ".webinfo");
 
-                var savePost = new XDocument(
-                    new XElement("post",
-                        new XElement("title", post.Title),
-                        new XElement("slug", post.Slug),
-                        new XElement("published_date", post.DateCreated.ToString("yyyy-MM-dd HH:mm:ss")),
-                        new XElement("excerpt", post.Abstract),
-                        new XElement("read_time", post.TimeToRead),
-                        new XElement("content", post.Content),
-                        new XElement("markdown_content", post.Content)
-                    ));
+                //var savePost = new XDocument(
+                //    new XElement("post",
+                //        new XElement("title", post.Title),
+                //        new XElement("slug", post.Slug),
+                //        new XElement("published_date", post.DateCreated.ToString("yyyy-MM-dd HH:mm:ss")),
+                //        new XElement("excerpt", post.Abstract),
+                //        new XElement("read_time", post.TimeToRead),
+                //        new XElement("content", post.Content),
+                //        new XElement("markdown_content", post.Content)
+                //    ));
 
                 //save to file
-                savePost.Save(filePath);
+               // savePost.Save(filePath);
 
                 //add to cache (or update if exists)
                 //MemoryCache.AddPost(post);
@@ -150,10 +150,10 @@ namespace MarkdownMvc
                 var post = new Post
                 {
                     Title = "test",
-                    Slug = "Slug",
-                    DateCreated = DateTime.Now,
+                  //  Slug = "Slug",
+                    //DateCreated = DateTime.Now,
                     Abstract = "blar",
-                    TimeToRead = 2,
+                   // TimeToRead = 2,
                     Content = Markdown.ToHtml(md)
                     //we dont care for having this in the cache, as edit post reads from disk regardless
                     //BodyMarkdown = null

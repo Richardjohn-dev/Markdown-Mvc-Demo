@@ -6,8 +6,9 @@
 
 @foreach (var post in Model)
 {
-    <div class="post">
-        <h2>@post.Title</h2>
-        <a asp-controller="Posts" asp-action="Index" asp-route-postTitle="@post.Title.Replace(' ','-')">read more</a>
-    </div>
+<div class="post">
+    <h2>@post.Title</h2>
+    <a asp-controller="Posts" asp-action="Index" asp-route-postTitle="@post.Title.Replace(' ','-')">read more</a>
+    <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id">edit</a>
+</div>
 }

@@ -1,4 +1,5 @@
-﻿using MarkdownMvc.Models;
+﻿using MarkdownMvc.Data;
+using MarkdownMvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,13 +16,13 @@ namespace MarkdownMvc.Controllers
         public List<Post> Posts { get; set; }
 
         private readonly ILogger<HomeController> _logger;
-        private readonly IFileService _fileService;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger, IFileService fileService)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
-            _fileService = fileService;
-            Posts = _fileService.ReadAllPosts();
+            _context = context;
+            Posts = _context.Posts.ToList();
         }
 
         public IActionResult Index()

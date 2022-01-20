@@ -1,4 +1,7 @@
-﻿using MarkdownMvc.Models;
+﻿using Markdig;
+using MarkdownMvc.Data;
+using MarkdownMvc.Models;
+using MarkdownMvc.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,12 +21,14 @@ namespace MarkdownMvc.Controllers
 
         private readonly ILogger<PostsController> _logger;
         private readonly IFileService _fileService;
+        private readonly ApplicationDbContext _context;
 
-        public PostsController(ILogger<PostsController> logger, IFileService fileService)
+        public PostsController(ILogger<PostsController> logger, IFileService fileService, ApplicationDbContext context)
         {
             _logger = logger;
             _fileService = fileService;
-            Posts = _fileService.ReadAllPosts();
+            _context = context;
+            Posts = _context.Posts.ToList();
         }
 
 
@@ -35,9 +40,15 @@ namespace MarkdownMvc.Controllers
         [Route("/post/{postTitle}")]
         public IActionResult Index(string postTitle)
         {
-            return View(
-                Posts.FirstOrDefault(p => p.Title == postTitle.Replace("-", " "))
-            );
+            var post = Posts.FirstOrDefault(p => p.Title == postTitle.Replace("-", " "));
+
+            var pvm = new PostViewModel
+            {
+                Abstract = post.Abstract,
+                Content = post.Content,
+                Title = post.Title
+            };
+            return View(pvm);
         }
 
         // GET: PostController/Details/5
@@ -49,17 +60,26 @@ namespace MarkdownMvc.Controllers
         // GET: PostController/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new PostViewModel());
         }
 
         // POST: PostController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(PostViewModel pvm)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var post = new Post
+                {
+                    Abstract = pvm.Abstract,
+                    Content = pvm.Content,
+                    Title = pvm.Title
+                };
+                _context.Add(post);
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(Index), new { postTitle = pvm.Title});
             }
             catch
             {
@@ -70,22 +90,36 @@ namespace MarkdownMvc.Controllers
         // GET: PostController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var post = Posts.FirstOrDefault(p => p.Id == id);
+            var pvm = new PostViewModel
+            {
+                Id = post.Id,
+                Abstract = post.Abstract,
+                Content = post.Content,
+                Title = post.Title
+            };
+            return View(pvm);
+           
         }
 
         // POST: PostController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, PostViewModel pvm)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                var post = Posts.FirstOrDefault(p => p.Id == id);
+                if (post is not null)
+                {
+                    post.Abstract = pvm.Abstract;
+                    post.Content = pvm.Content;
+                    post.Title = pvm.Title;
+                    _context.SaveChanges();
+                }
+                return RedirectToAction(nameof(Index), new { postTitle = post.Title });
             }
-            catch
-            {
-                return View();
-            }
+            return View(pvm);           
         }
 
         // GET: PostController/Delete/5
