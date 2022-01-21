@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\post-images\**" />
+    <Content Remove="wwwroot\post-images\**" />
+    <EmbeddedResource Remove="wwwroot\post-images\**" />
+    <None Remove="wwwroot\post-images\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="IMarkdownParser.cs" />
     <Compile Remove="Markdown.cs" />
     <Compile Remove="MarkdownParserBase.cs" />
@@ -21,10 +28,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\blog-images\" />
+    <PackageReference Include="PhotoSauce.MagicScaler" Version="0.12.2" />
   </ItemGroup>
 
 </Project>

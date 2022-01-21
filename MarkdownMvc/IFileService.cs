@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using TheBlogProject.Models;
-
-namespace MarkdownMvc
+﻿namespace MarkdownMvc
 {
     public interface IFileService
     {
-        List<Post> ReadAllPosts();
+        void DeleteImage(string filename);
+        void ProcessRemovedImages(string oldBody, string newBody);
     }
 }

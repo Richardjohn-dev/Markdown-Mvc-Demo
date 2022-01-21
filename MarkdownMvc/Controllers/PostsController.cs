@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PhotoSauce.MagicScaler;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -114,15 +115,19 @@ namespace MarkdownMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var post = Posts.FirstOrDefault(p => p.Id == id);
-                if (post is not null)
+                var originalPost = Posts.FirstOrDefault(p => p.Id == id);
+                if (originalPost is not null)
                 {
-                    post.Abstract = pvm.Abstract;
-                    post.Content = pvm.Content;
-                    post.Title = pvm.Title;
+
+                    //first we delete abandoned images
+                    _fileService.ProcessRemovedImages(originalPost.Content, pvm.Content);
+
+                    originalPost.Abstract = pvm.Abstract;
+                    originalPost.Content = pvm.Content;
+                    originalPost.Title = pvm.Title;
                     _context.SaveChanges();
                 }
-                return RedirectToAction(nameof(Index), new { postTitle = post.Title });
+                return RedirectToAction(nameof(Index), new { postTitle = originalPost.Title });
             }
             return View(pvm);           
         }
@@ -149,19 +154,32 @@ namespace MarkdownMvc.Controllers
         }
                
         [HttpPost]
-        public async Task<JsonResult> UploadImage(IFormFile file)
+        public JsonResult UploadImage(IFormFile file)
         {
             if (file is not null)
             {
                 string fileName = $"{Guid.NewGuid()}-{file.FileName.Replace(" ", "-")}";
-                var path = Path.Combine(Directory.GetCurrentDirectory(), _env.WebRootPath, "blog-images", fileName);
-                using var stream = new FileStream(path, FileMode.Create);
-                await file.CopyToAsync(stream);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), _env.WebRootPath, "post-images", fileName);
+                using var fileStream = new FileStream(path, FileMode.Create);
+                //await file.CopyToAsync(stream);
+                MagicImageProcessor.ProcessImage(file.OpenReadStream(), fileStream, ImageOptions());
+
                 return new JsonResult(fileName);
             }
 
             return Json(new { ErrorMessage = "You need to be logged in to upload images." }); ;
         }
+
+
+        private static ProcessImageSettings ImageOptions() => new()
+        {
+            Width = 800,
+            Height = 500,
+            ResizeMode = CropScaleMode.Crop,
+            SaveFormat = FileFormat.Jpeg,
+            JpegQuality = 100,
+            JpegSubsampleMode = ChromaSubsampleMode.Subsample420
+        };
 
     }
 }
