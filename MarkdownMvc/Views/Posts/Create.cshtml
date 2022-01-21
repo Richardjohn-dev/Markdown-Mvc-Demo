@@ -4,6 +4,10 @@
     ViewData["Title"] = "Create";
 }
 
+<div class="notification-bar" id="notification">
+    <p id="notificationText" class="notification-bar__message"></p>
+</div>
+
 
 <h1>Create</h1>
 
@@ -11,7 +15,7 @@
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Create" enctype="multipart/form-data">
+        <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
@@ -37,24 +41,6 @@
     </div>
 </div>
 
-@*<h1>Image upload page</h1>
-    <hr />
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Upload Image</h2>
-            <form method="post" enctype="multipart/form-data" id="imageUploadForm" class="dropzone">
-                <div class="fallback">
-                    <div class="form-group">
-                        <input name="image" type="file" class="form-control" accept="image/*" />
-                    </div>
-                    <input type="submit" value="Upload" class="btn btn-default" />
-                </div>
-            </form>
-
-            <progress id="progress-bar" max=100 value=0></progress>
-            <div id="gallery" />
-        </div>
-    </div>*@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
@@ -62,76 +48,16 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    @*<link href="~/css/dropzone.css" rel="stylesheet" />
-        <script src="~/js/dropzone.js"></script>
-        <script>
-            //$("#imageUploadForm").dropzone({
-            //    url: "/posts/UploadImage",
-            //    paramName: "image",
-            //    acceptedFiles: "image/*",
-            //    success: function (file) {
-            //        $("#recentImage").attr('src', `./blog-images/${file.name}`);
-            //    }
-            //});
-            var nameColletion = [];
-
-            $("#imageUploadForm").dropzone({
-                url: "/posts/UploadImage",
-                paramName: "image",
-                acceptedFiles: "image/*",
-                success: function previewFile(file) {
-                    var reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onloadend = function () {
-                        var img = document.createElement("img");
-                        img.src = reader.result;
-                        img.id = file.name;
-                        img.addEventListener("click", handleImageClick);
-                        document.getElementById("gallery").appendChild(img);
-                    };
-                }
-            });
-
-            function handleImageClick() {
-                var oldName = this.id;
-                for (var i = 0; i < nameColletion.length; i++) {
-                    var stored = nameColletion[i].split("|");
-                    if (stored[0] === oldName) {
-                        if (stored[1] === "Login error") {
-                            notifyError();
-                            return copyStringToClipboard("LOGIN ERROR");
-                        } else {
-                            notify();
-                            return copyStringToClipboard("![alt-text-here](/blog-images/" + stored[1] + ")");
-                        }
-                    }
-                }
-                return null;
-            }
-            //function previewFile(file) {
-            //    var reader = new FileReader();
-            //    reader.readAsDataURL(file);
-            //    reader.onloadend = function () {
-            //        var img = document.createElement("img");
-            //        img.src = reader.result;
-            //        img.id = file.name;
-            //        img.addEventListener("click", handleImageClick);
-            //        document.getElementById("gallery").appendChild(img);
-            //    };
-            //}
-        </script>*@
-
 }
 
 <div id="drop-area">
-    <form class="image-submit-form" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
         <p>Drop images here</p>
-        <input type="file" id="fileElem" value="Upload" multiple accept="image/*" onchange="handleFiles(this.files)">
-        <label class="button" for="fileElem">Select files</label>
+        <input type="file" id="file"  multiple accept="image/*" onchange="handleFiles(this.files)">
+        <label class="button" for="file">Select files</label>
     </form>
     <progress id="progress-bar" max=100 value=0></progress>
     <div id="gallery" />
 </div>
 
 <script src="~/js/image_upload.js"></script>
-

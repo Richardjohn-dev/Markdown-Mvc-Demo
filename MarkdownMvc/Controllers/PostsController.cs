@@ -149,12 +149,18 @@ namespace MarkdownMvc.Controllers
         }
                
         [HttpPost]
-        public async Task UploadImage(IFormFile image)
+        public async Task<JsonResult> UploadImage(IFormFile file)
         {
-            string fileName = $"{Guid.NewGuid()}-{image.FileName.Replace(" ", "-")}";
-            var path = Path.Combine(Directory.GetCurrentDirectory(), _env.WebRootPath, "blog-images", fileName);
-            using var stream = new FileStream(path, FileMode.Create);
-            await image.CopyToAsync(stream);
+            if (file is not null)
+            {
+                string fileName = $"{Guid.NewGuid()}-{file.FileName.Replace(" ", "-")}";
+                var path = Path.Combine(Directory.GetCurrentDirectory(), _env.WebRootPath, "blog-images", fileName);
+                using var stream = new FileStream(path, FileMode.Create);
+                await file.CopyToAsync(stream);
+                return new JsonResult(fileName);
+            }
+
+            return Json(new { ErrorMessage = "You need to be logged in to upload images." }); ;
         }
 
     }

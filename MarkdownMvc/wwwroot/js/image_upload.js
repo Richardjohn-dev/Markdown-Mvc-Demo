@@ -130,7 +130,7 @@ function handleImageClick() {
                 return copyStringToClipboard("LOGIN ERROR");
             } else {
                 notify();
-                return copyStringToClipboard("![alt-text-here](/post-images/" + stored[1] + ")");
+                return copyStringToClipboard("![alt-text-here](/blog-images/" + stored[1] + ")");
             }
         }
     }
