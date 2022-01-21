@@ -2,12 +2,15 @@
 using MarkdownMvc.Data;
 using MarkdownMvc.Models;
 using MarkdownMvc.Models.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using TheBlogProject.Models;
 
@@ -22,12 +25,14 @@ namespace MarkdownMvc.Controllers
         private readonly ILogger<PostsController> _logger;
         private readonly IFileService _fileService;
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public PostsController(ILogger<PostsController> logger, IFileService fileService, ApplicationDbContext context)
+        public PostsController(ILogger<PostsController> logger, IFileService fileService, ApplicationDbContext context, IWebHostEnvironment env)
         {
             _logger = logger;
             _fileService = fileService;
             _context = context;
+            _env = env;
             Posts = _context.Posts.ToList();
         }
 
@@ -142,5 +147,16 @@ namespace MarkdownMvc.Controllers
                 return View();
             }
         }
+               
+        [HttpPost]
+        public async Task UploadImage(IFormFile image)
+        {
+            string fileName = $"{Guid.NewGuid()}-{image.FileName.Replace(" ", "-")}";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), _env.WebRootPath, "blog-images", fileName);
+            using var stream = new FileStream(path, FileMode.Create);
+            await image.CopyToAsync(stream);
+            // return new JsonResult(new { Data = fileName });           
+        }
+
     }
 }

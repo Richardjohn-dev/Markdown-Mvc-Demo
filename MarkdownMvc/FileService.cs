@@ -22,7 +22,7 @@ namespace MarkdownMvc
         public FileService(IWebHostEnvironment env)
         {
             _env = env;
-            _folder = _env.WebRootPath;
+            _folder = _env.WebRootPath + "/";
 
             EnsureFolder("/blog-posts/");
             EnsureFolder("/blog-images/");
