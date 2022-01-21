@@ -8,7 +8,6 @@
     <p id="notificationText" class="notification-bar__message"></p>
 </div>
 
-
 <h1>Create</h1>
 
 <h4>Post</h4>
@@ -48,12 +47,19 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+
+    <script>
+        var simplemde = new SimpleMDE();
+    </script>
+
 }
 
 <div id="drop-area">
     <form method="post" enctype="multipart/form-data">
         <p>Drop images here</p>
-        <input type="file" id="file"  multiple accept="image/*" onchange="handleFiles(this.files)">
+        <input type="file" id="file" multiple accept="image/*" onchange="handleFiles(this.files)">
         <label class="button" for="file">Select files</label>
     </form>
     <progress id="progress-bar" max=100 value=0></progress>
