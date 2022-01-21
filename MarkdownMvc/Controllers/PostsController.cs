@@ -155,7 +155,6 @@ namespace MarkdownMvc.Controllers
             var path = Path.Combine(Directory.GetCurrentDirectory(), _env.WebRootPath, "blog-images", fileName);
             using var stream = new FileStream(path, FileMode.Create);
             await image.CopyToAsync(stream);
-            // return new JsonResult(new { Data = fileName });           
         }
 
     }

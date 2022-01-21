@@ -81,7 +81,7 @@ function previewFile(file) {
 function uploadFile(file, i) {
     var xhr = new XMLHttpRequest();
     var formData = new FormData();
-    xhr.open("POST", "/submit/upload", true);
+    xhr.open("POST", "/posts/uploadimage", true);
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
     xhr.upload.addEventListener("progress",
