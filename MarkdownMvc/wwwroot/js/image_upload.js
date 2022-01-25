@@ -124,7 +124,8 @@ function handleImageClick() {
     var oldName = this.id;
     for (var i = 0; i < nameColletion.length; i++) {
         var stored = nameColletion[i].split("|");
-        if (stored[0] === oldName) {
+        if (stored[0] === oldName)
+        {
             if (stored[1] === "Login error") {
                 notifyError();
                 return copyStringToClipboard("LOGIN ERROR");

@@ -44,6 +44,100 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+@*<style>
+    #notification {
+        z-index: 101;
+        /*position: absolute;
+         top: 0;
+        left: 0;
+        right: 0;
+        background: #fde073;
+        text-align: center;
+        line-height: 2.5;
+        overflow: hidden;
+        -webkit-box-shadow: 0 0 5px black;
+        -moz-box-shadow: 0 0 5px black;
+        box-shadow: 0 0 5px black;*/
+    }
+</style>*@
+
+@*<style>
+      
+
+    #drop-area {
+        border: 2px dashed #ccc;
+        display: block;
+        padding: 20px;
+        margin-top: 50px;
+    }
+
+    #drop-area.highlight {
+        border-color: gray;
+    }
+
+    #gallery {
+        margin-top: 10px;
+    }
+
+    #gallery img {
+        width: 150px;
+        margin-bottom: 10px;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+
+    #file {
+        display: none;
+    }
+
+    .galleryButton {
+        font-family: sans-serif;
+        background-color: #ffffff;
+        border: 2px gray solid;
+        cursor: pointer;
+        display: inline-block;
+        padding: 10px;
+        transition-duration: 0.5s;
+    }
+
+    .notification-bar {
+        opacity: 0;
+        position: fixed;
+        background-color: green;
+        height: 75px;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .notification-bar__error {
+        background-color: #fd4040;
+    }
+
+    .notification-bar__message {
+        text-align: center;
+        color: white;
+        font-size: 1.4em;
+    }
+    
+    .toggle-show {
+        opacity: 1;
+        animation-name: fades;
+        animation-duration: 2s;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes fades {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+</style>*@
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
@@ -60,7 +154,7 @@
     <form method="post" enctype="multipart/form-data">
         <p>Drop images here</p>
         <input type="file" id="file" multiple accept="image/*" onchange="handleFiles(this.files)">
-        <label class="button" for="file">Select files</label>
+        <label class="button galleryButton" for="file">Select files</label>
     </form>
     <progress id="progress-bar" max=100 value=0></progress>
     <div id="gallery" />
