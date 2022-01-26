@@ -60,10 +60,11 @@
     <form method="post" enctype="multipart/form-data">
         <p>Drop images here</p>
         <input type="file" id="file" multiple accept="image/*" onchange="handleFiles(this.files)">
-        <label class="button" for="file">Select files</label>
+        <label class="button galleryButton" for="file">Select files</label>
     </form>
     <progress id="progress-bar" max=100 value=0></progress>
     <div id="gallery" />
 </div>
 
 <script src="~/js/image_upload.js"></script>
+

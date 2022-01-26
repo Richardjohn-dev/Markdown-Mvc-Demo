@@ -4,5 +4,7 @@
     {
         void DeleteImage(string filename);
         void ProcessRemovedImages(string oldBody, string newBody);
+        string GetReadTime(string post);
+
     }
 }

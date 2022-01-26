@@ -125,6 +125,7 @@ namespace MarkdownMvc.Controllers
                     originalPost.Abstract = pvm.Abstract;
                     originalPost.Content = pvm.Content;
                     originalPost.Title = pvm.Title;
+                    originalPost.ReadTime = _fileService.GetReadTime(pvm.Content);
                     _context.SaveChanges();
                 }
                 return RedirectToAction(nameof(Index), new { postTitle = originalPost.Title });

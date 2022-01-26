@@ -26,7 +26,8 @@ namespace TheBlogProject.Models
         [Required]
         public string Content { get; set; }
 
-      
+        public string ReadTime { get; set; }
+
     }
 
 

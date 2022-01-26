@@ -15,6 +15,8 @@ namespace MarkdownMvc
 {
     public class FileService : IFileService
     {
+        private readonly int _wordsPerMinute = 170;
+
         private static string _folder;
 
         private readonly IWebHostEnvironment _env;
@@ -38,48 +40,22 @@ namespace MarkdownMvc
 
         public void ProcessRemovedImages(string oldBody, string newBody)
         {
-            //get all old links
-            var allOldLinks = new Regex(@"!\[.*?\]\(.*?\)").Matches(oldBody).Cast<Match>().Select(m => m.Value).ToList();
-
-            //check that there is something to remove
-            if (allOldLinks.Count > 0)
-            {
-                //parse all old links to get the guids
-                var oldLinkGuidList = new List<string>();
-                foreach (var oldLink in allOldLinks)
-                {
-                    //make sure the link is for this server
-                    if (oldLink.Contains("/post-images/"))
-                    {
-                        //build a list of all old images
-                        oldLinkGuidList.Add(oldLink.Substring(oldLink.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase)));
-                    }
-                }
-
-                //get all new links
-                var allNewLinks = new Regex(@"!\[.*?\]\(.*?\)").Matches(newBody).Cast<Match>().Select(m => m.Value).ToList();
-                foreach (var newLink in allNewLinks)
-                {
-                    //make sure the link is for this server
-                    if (newLink.Contains("/post-images/"))
-                    {
-                        //remove all images still in use from the list
-                        oldLinkGuidList.Remove(newLink.Substring(newLink.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase)));
-                    }
-                }
-
-                //once we are done adding and removing to the list, delete all that remain from disk
-                if (oldLinkGuidList.Count > 0)
-                {
-                    foreach (var image in oldLinkGuidList)
-                    {
-                        //delete the image file
-                        DeleteImage(image.Replace("/", "").Replace(")", ""));
-                    }
-                }
+            // were simply saying...
+            // "we're going to delete these old images, unless they are in our list of links from newBody"
+            var oldBodyImages = GetImageLinks(oldBody);
+            if (oldBodyImages.Count > 0)
+            {               
+                var newBodyImages = GetImageLinks(newBody);
+                var deleteImages = oldBodyImages.Except(newBodyImages).ToList();
+                deleteImages.ForEach(x => DeleteImage(x));    
             }
         }
 
+        public List<string> GetImageLinks(string body)
+        {
+            return  new Regex(@"!\[.*?\]\(.*?\)").Matches(body).Cast<Match>()
+                .Select(m => m.Value.Substring(m.Value.LastIndexOf("/") + 1).Replace(")", "")).ToList();          
+         }
         public void DeleteImage(string filename)
         {
             try
@@ -97,5 +73,15 @@ namespace MarkdownMvc
             }
         }
 
+        public string GetReadTime(string post)
+        {
+            //get the amount of words
+            var words = post.Count(Char.IsWhiteSpace);
+
+            //guess that people read 200 words per minute
+            var timeToRead = words / _wordsPerMinute;
+
+            return timeToRead < 1 ? "1" : timeToRead.ToString();
+        }
     }
 }
