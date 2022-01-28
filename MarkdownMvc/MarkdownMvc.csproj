@@ -28,8 +28,4 @@
     <PackageReference Include="PhotoSauce.MagicScaler" Version="0.12.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\blog-images\" />
-  </ItemGroup>
-
 </Project>
